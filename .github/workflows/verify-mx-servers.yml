@@ -17,7 +17,16 @@ jobs:
 
       - name: Run a multi-line script
         run: |
+          newlist=$(mktemp)
           for _name in $(<mx_servers.txt);do
             echo "Checking ${_name}"
-            (echo | nc -z ${_name} 25 2>/dev/null) || echo "${_name} is invalid"
+            (echo | nc -z ${_name} 25 2>/dev/null) && ( echo ${_name} >> ${newlist} ) || echo "${_name} is invalid"
           done
+          sort -u ${newlist} > mx_servers.txt
+      - name: Create commits
+        run: |
+          git config user.name 'Pantelis Roditis'
+          git config user.email 'proditis@users.noreply.github.com'
+          git commit -am "Modify tracked file during workflow"
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5

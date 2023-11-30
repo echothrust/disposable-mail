@@ -24,6 +24,8 @@ jobs:
             (echo | nc -z ${_name} 25 2>/dev/null) && ( echo ${_name} >> ${newlist} ) || ( echo ${_name} >> ${faillist} )
           done
           sort -u ${newlist} > mx_servers.txt
+          REMOVED=$(sort -u ${faillist})
+          echo "REMOVED=${REMOVED}">>$GITHUB_ENV
       - name: Create commits
         run: |
           git config user.name 'Pantelis Roditis'
@@ -32,4 +34,4 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          body: Update changelog to reflect release changes
+          body: ${{ env.REMOVED }}

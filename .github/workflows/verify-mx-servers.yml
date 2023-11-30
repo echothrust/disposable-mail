@@ -24,7 +24,7 @@ jobs:
             (echo | nc -z ${_name} 25 2>/dev/null) && ( echo ${_name} >> ${newlist} ) || ( echo ${_name} >> ${faillist} )
           done
           sort -u ${newlist} > mx_servers.txt
-          REMOVED=$(sort -u ${faillist})
+          REMOVED=$(sort -u ${faillist}|tr '\n' ' ')
           echo "REMOVED='${REMOVED}'">>$GITHUB_ENV
       - name: Create commits
         run: |

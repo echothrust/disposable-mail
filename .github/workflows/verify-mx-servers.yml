@@ -27,6 +27,6 @@ jobs:
         run: |
           git config user.name 'Pantelis Roditis'
           git config user.email 'proditis@users.noreply.github.com'
-          git commit -am "Modify tracked file during workflow"
+          [[ ! -z $(git status -s) ]] && git commit -am "Modify tracked file during workflow"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5

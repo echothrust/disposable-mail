@@ -19,8 +19,5 @@ jobs:
         run: |
           for _name in $(<mx_servers.txt);do
             echo "Checking ${_name}"
-            nc -z ${_name} 25
-            if [ $? -ne 0 ]; then
-              echo "${_name} is invalid"
-            fi
+            (echo | nc -z ${_name} 25 2>/dev/null) || echo "${_name} is invalid"
           done

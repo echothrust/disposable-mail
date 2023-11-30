@@ -1,0 +1,26 @@
+name: Verify MX Servers
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  netcat25:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run a multi-line script
+        run: |
+          for _name in $(<mx_servers.txt);do
+            echo "Checking ${_name}"
+            nc -z ${_name} 25
+            if [ $? -ne 0 ]; then
+              echo "${_name} is invalid"
+            fi
+          done
